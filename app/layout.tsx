@@ -4,7 +4,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const yomogi_init = Anek_Bangla({
+const font_init = Anek_Bangla({
   weight: '400',
   subsets: ["latin"],
   display: "swap",
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${yomogi_init.variable}`}>{children}</body>
+      <body className={`${inter.className} ${font_init.variable}`}>{children}</body>
     </html>
   );
 }
