@@ -13,6 +13,16 @@ body {
   --secondary_dark: #906069;
   --tertiary: #9a8c98;
 }
+.icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  background-image: url('./favicon.png');
+  background-size: contain;
+  height: 3rem;
+  width: 3rem;
+}
 .blob_bg {
   background: url('./blob-bg.png');
   background-size: cover;

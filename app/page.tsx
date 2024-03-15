@@ -65,6 +65,7 @@ export default function Home() {
             {loading ? <LinearProgress sx={{width: '100%'}}/> : <></>}
         </div>
       </div>
+      <div className="icon"></div>
     </div>
   );
 }
