@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main_font {
+  font-family: var(--font-yomogi);
+}
+body {
+  color: #545253;
+  --primary: #f2e9e4;
+  --primary_dark: #c9ada7;
+  --secondary: #b5838d;
+  --secondary_dark: #906069;
+  --tertiary: #9a8c98;
+}
+.blob_bg {
+  background: url('./blob-bg.png');
+  background-size: cover;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+}
+
+.submit_bar {
+  outline: none;
+  border: 0px solid black;
+  color: #545253;
+  transition: 0.2s;
+  border-radius: 0;
+}
+.submit_bar:disabled {
+  background-color: rgb(243, 243, 243);
+  color: #2a2a2a;
+}
+
+.blob_button {
+  background: var(--secondary);
+  color: white;
+
+  border: 0px solid black;
+  transition: 0.2s;
+  border-radius: 0;
+}
+.blob_button:disabled {
+  background: var(--secondary_dark);
+}
+.blob_button:hover {
+  filter: brightness(1.1);
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}

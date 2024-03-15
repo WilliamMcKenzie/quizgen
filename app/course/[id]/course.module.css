@@ -1,0 +1,65 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 100vh;
+    width: 100vw;
+}
+.step {
+    margin: 10vh;
+}
+
+.island {
+    position: relative;
+
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1000000px;
+}
+
+.island div {
+    position: absolute;
+    top: -8px;
+
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1000000px;
+
+    transition: 0.1s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+}
+.island div:hover {
+    top: -6px;
+}
+.island div:active {
+    top: -10px;
+}
+
+.undiscovered {
+    background-color: #616161;
+}
+.undiscovered div {
+    background-color: #848484;
+}
+.current {
+    background-color: #97636d;
+}
+.current div {
+    background-color: #b5838d;
+}
+
+.done {
+    background-color: #ad8a82;
+}
+.done div {
+    background-color: #c9ada7;
+}
