@@ -70,8 +70,9 @@ export default function Home() {
     setLoading(true)
     if(id != "" && subject.length < 50){
       const generatedCourse = await fetcher(`/api/generateCourse?prompt=${subject}`, undefined)
-      setCourse(generatedCourse.choices[0].message.content)
-      goToCourse(generatedCourse.choices[0].message.content)
+
+      setCourse(JSON.stringify(generatedCourse))
+      goToCourse(JSON.stringify(generatedCourse))
     }
     else window.alert("TOO LONG YOU FOOL")
   }
