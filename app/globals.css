@@ -13,51 +13,23 @@ body {
   --secondary_dark: #906069;
   --tertiary: #9a8c98;
 }
-.icon {
+
+.screen {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  background-image: url('./favicon.png');
-  background-size: contain;
-  height: 3rem;
-  width: 3rem;
-}
-.blob_bg {
-  background: url('./blob-bg.png');
-  background-size: cover;
-
-  margin: 0 !important;
-  padding: 0 !important;
   width: 100vw;
   height: 100vh;
-}
+  background-color: rgba(0, 0, 0, 0.5);
 
-.submit_bar {
-  outline: none;
-  border: 0px solid black;
-  color: #545253;
-  transition: 0.2s;
-  border-radius: 0;
+  z-index: 10000;
 }
-.submit_bar:disabled {
-  background-color: rgb(243, 243, 243);
-  color: #2a2a2a;
-}
-
-.blob_button {
-  background: var(--secondary);
-  color: white;
-
-  border: 0px solid black;
-  transition: 0.2s;
-  border-radius: 0;
-}
-.blob_button:disabled {
-  background: var(--secondary_dark);
-}
-.blob_button:hover {
-  filter: brightness(1.1);
+.box {
+  width: 5vw;
+  height: 5vw;
+  background: var(--primary);
 }
 
 :root {

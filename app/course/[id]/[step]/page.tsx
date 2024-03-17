@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Check} from "@mui/icons-material";
 import styles from './step.module.css'
 import { Button } from "@mui/material";
+import LoadingScreen from "@/app/components/loading_screen";
 
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
@@ -25,6 +26,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
   const [disableButtons, setDB] = useState(false)
 
   async function goToCourse() {
+    setStep({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
     await fetcher(`/api/updateCourse?id=${courseID}`, undefined)
     router.push(`/course/${courseID}`);
   }
@@ -36,8 +38,8 @@ export default function Step({ params }: { params: { id: string, step: number } 
     fetchCourseInit()
   }, []);
 
-  return (
-    <main className={`${styles.container} main_font`}>
+  return (<div className={`${styles.container} main_font`}>
+    {step.name == "" ? <LoadingScreen></LoadingScreen> : <main className={`${styles.container} main_font`}>
       {question >= 0 ? (
         <>
           <h1 style={{fontSize:'2rem'}} className="main_font font-bold">{step.name.toUpperCase()}</h1>
@@ -96,6 +98,6 @@ export default function Step({ params }: { params: { id: string, step: number } 
           </button>
         </>
       )}
-    </main>
-  );
+    </main>}
+    </div>);
 }

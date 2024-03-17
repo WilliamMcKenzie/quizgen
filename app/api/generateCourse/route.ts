@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
     const chatCompletion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: aiRequest }, { role: 'user', content: prompt }],
         model: 'gpt-3.5-turbo',
-        max_tokens: 2000
+        max_tokens: 2000,
+        temperature: 0.1
     });
 
     return NextResponse.json(chatCompletion)

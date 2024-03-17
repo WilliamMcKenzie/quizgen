@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { IconButton, Step } from "@mui/material";
 import styles from './course.module.css'
+import LoadingScreen from "@/app/components/loading_screen";
+import { motion } from "framer-motion";
 
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
@@ -32,22 +34,32 @@ export default function Course({ params }: { params: { id: string } }) {
 
   async function goToStep(index: number) {
     if(index <= curStep){
+        setCourse([])
         router.push(`/course/${courseID}/${index}`);
     }
   }
 
   return (
     <main className={`${styles.container} main_font`}>
-        <button className="absolute top-10 left-10 text-3xl" onClick={() => {router.push(`/`);}}>
-            {"BACK"}
-        </button>
-        {course.map((step, index) => (
-        <div className={styles.step} key={`step_${index}`} style={{margin: 10, marginLeft: margins[(index % margins.length + margins.length) % margins.length]}}>
-            <button onClick={() => goToStep(index)} className={`${styles.island} ${index > curStep ? styles.undiscovered : index == curStep ? styles.current : styles.done}`}>
-              <div>
-                {index+1}
-              </div>
-            </button>
-        </div>))}
+        {course[0] ? <>
+          <button className="absolute top-10 left-10 text-3xl" onClick={() => {router.push(`/`);}}>
+              {"BACK"}
+          </button>
+          {course.map((step, index) => (
+          <motion.div className={styles.step} key={`step_${index}`} style={{margin: 10, marginLeft: margins[(index % margins.length + margins.length) % margins.length]}}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 1.5,
+                delay: 0.5,
+                ease: [0, 0.71, 0.2, 1.01]
+              }}>
+              <button onClick={() => goToStep(index)} className={`${styles.island} ${index > curStep ? styles.undiscovered : index == curStep ? styles.current : styles.done}`}>
+                <div>
+                  {index+1}
+                </div>
+              </button>
+          </motion.div>))}
+        </> : <LoadingScreen></LoadingScreen>}
     </main>);
 }

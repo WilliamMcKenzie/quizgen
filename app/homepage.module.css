@@ -1,0 +1,39 @@
+.blob_bg {
+  background: url('./blob-bg.png');
+  background-size: cover;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+}
+
+.submit_bar {
+  outline: none;
+  border: 0px solid black;
+  color: #545253;
+  transition: 0.2s;
+  border-radius: 2px;
+}
+.submit_bar:disabled {
+  background-color: rgb(243, 243, 243);
+  color: #2a2a2a;
+}
+
+.blob_button {
+  background: var(--tertiary);
+  color: white;
+
+  border: 0px solid black;
+  transition: 0.2s;
+  border-radius: 2px;
+}
+.blob_button:hover {
+  filter: brightness(1.1);
+}
+.blob_button:disabled {
+  background: var(--primary_dark);
+}
+.blob_button:disabled:hover {
+  filter: brightness(1.0) !important;
+}
