@@ -48,9 +48,9 @@ export default function Home() {
   }, []);
 
   async function fetchUser(){
-    if(getCookie("id")){
+    if(getCookie("email") && getCookie("password")){
       setID("LOADING")
-      const fetchUser = await fetcher(`/api/fetchUser?password=${password}&email=${email}`, undefined)
+      const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
 
       if(fetchUser.id) {
         setID(fetchUser.id)
@@ -90,7 +90,8 @@ export default function Home() {
       }
 
       setID(createUser.id)
-      setCookie(createUser.id)
+      document.cookie = `email=${createUser.email}; path=/`
+      document.cookie = `password=${createUser.password}; path=/`
     }
   }
 
