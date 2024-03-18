@@ -72,10 +72,14 @@ export default function Home() {
   async function handleClick() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
-      const generatedCourse = await fetcher(`/api/generateCourse?prompt=${subject}`, undefined)
+      const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
+      const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
 
-      setCourse(JSON.stringify(generatedCourse))
-      goToCourse(JSON.stringify(generatedCourse))
+      console.log(generatedCourse1)
+      console.log(generatedCourse2)
+
+      // setCourse(JSON.stringify(generatedCourse))
+      // goToCourse(JSON.stringify(generatedCourse))
     }
     else window.alert("TOO LONG YOU FOOL")
   }
