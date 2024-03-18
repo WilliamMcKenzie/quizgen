@@ -135,7 +135,7 @@ export default function Home() {
               className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
               disabled={loading}
             />
-            <IconButton color="#9900ff" aria-label="add an alarm" onClick={handleClick} disabled={loading}>
+            <IconButton aria-label="add an alarm" onClick={handleClick} disabled={loading}>
               <ArrowForward />
             </IconButton>
           </div>

@@ -92,9 +92,8 @@ export default function Step({ params }: { params: { id: string, step: number } 
         </>
       ) : (
         <>
-          <h1>Your score is {score} out of {step.questions.length}.</h1>
           <button className={styles.done_button} onClick={() => goToCourse()}>
-            DONE
+            Your score is {score} out of {step.questions.length}
           </button>
         </>
       )}
