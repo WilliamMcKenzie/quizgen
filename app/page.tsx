@@ -75,11 +75,12 @@ export default function Home() {
       const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
       const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
 
-      console.log(generatedCourse1)
-      console.log(generatedCourse2)
+      for(var step of generatedCourse2.content){
+        generatedCourse1.content.push(step)
+      }
 
-      // setCourse(JSON.stringify(generatedCourse))
-      // goToCourse(JSON.stringify(generatedCourse))
+      setCourse(JSON.stringify(generatedCourse1))
+      goToCourse(JSON.stringify(generatedCourse1))
     }
     else window.alert("TOO LONG YOU FOOL")
   }
