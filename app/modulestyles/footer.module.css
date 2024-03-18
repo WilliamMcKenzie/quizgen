@@ -1,0 +1,51 @@
+footer::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: 15px 15px;
+    backdrop-filter: brightness(90%) blur(20px);
+    -webkit-backdrop-filter: brightness(90%) blur(20px);
+    -moz-backdrop-filter: brightness(90%) blur(20px);
+    mask-image: repeating-radial-gradient(
+      circle at 50% 50% center,
+      var(--background),
+      var(--background) 20px,
+      rgba(255, 255, 255, 0.3) 20.5px,
+      rgba(255, 255, 255, 0.3) 21px
+    );
+    -webkit-mask-image: repeating-radial-gradient(
+      circle at 50% 50%,
+      var(--background),
+      var(--background) 20px,
+      rgba(255, 255, 255, 0.3) 20.5px,
+      rgba(255, 255, 255, 0.3) 21px
+    );
+  }
+  
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  
+  footer svg {
+    margin-right: 20px;
+    position: relative;
+  }
+  
+  footer a {
+    text-decoration: none;
+    color: var(--accent);
+    position: relative;
+  }

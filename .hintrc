@@ -16,7 +16,8 @@
     "axe/name-role-value": [
       "default",
       {
-        "button-name": "off"
+        "button-name": "off",
+        "link-name": "off"
       }
     ],
     "axe/text-alternatives": [
@@ -25,6 +26,7 @@
         "image-alt": "off"
       }
     ],
-    "button-type": "off"
+    "button-type": "off",
+    "disown-opener": "off"
   }
 }

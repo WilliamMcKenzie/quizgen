@@ -73,13 +73,16 @@
     width: fit-content !important;
     margin-top: 30px !important;
 
-    background-color: var(--secondary) !important;
+    background-color: var(--yellow) !important;
     color: white !important;
     font-weight: 600 !important;
 
     border: 0px !important;
     border-bottom: 0px !important;
     border-radius: 10px; 
+}
+.continue_button {
+    background-color: var(--purple) !important;
 }
 .check_button:disabled {
     background-color: rgb(185, 185, 185) !important;
@@ -89,7 +92,7 @@
 .done_button {
     margin-top: 30px !important;
 
-    background: var(--secondary);
+    background: var(--pink);
     padding: 1rem;
     color: white !important;
 

@@ -7,11 +7,33 @@
 }
 body {
   color: #545253;
-  --primary: #f2e9e4;
+  /* --primary: #f2e9e4;
   --primary_dark: #c9ada7;
   --secondary: #b5838d;
   --secondary_dark: #906069;
-  --tertiary: #9a8c98;
+  --tertiary: #9a8c98; */
+  --green: #CBEDEA;
+  --blue: #94C2E5;
+
+  --black: #000000;
+  --ash-black: #222;
+  --white: #fafafa;
+  --sky: #00ccff;
+  --dusk: #6600ff;
+  --purple: #9900ff;
+  --pink: #ff0066;
+  --red: #fe0222;
+  --orange: #fd7702;
+  --yellow: #ffbb00;
+
+  --background: var(--white);
+  --accent: var(--purple);
+
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  padding-bottom: 100px;
+  overflow: hidden;
 }
 
 .screen {
@@ -29,7 +51,7 @@ body {
 .box {
   width: 5vw;
   height: 5vw;
-  background: var(--primary);
+  background: var(--yellow);
 }
 
 :root {
@@ -44,4 +66,62 @@ body {
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+footer::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 15px 15px;
+  backdrop-filter: brightness(90%) blur(20px);
+  -webkit-backdrop-filter: brightness(90%) blur(20px);
+  -moz-backdrop-filter: brightness(90%) blur(20px);
+  mask-image: repeating-radial-gradient(
+    circle at 50% 50% center,
+    var(--background),
+    var(--background) 20px,
+    rgba(255, 255, 255, 0.3) 20.5px,
+    rgba(255, 255, 255, 0.3) 21px
+  );
+  -webkit-mask-image: repeating-radial-gradient(
+    circle at 50% 50%,
+    var(--background),
+    var(--background) 20px,
+    rgba(255, 255, 255, 0.3) 20.5px,
+    rgba(255, 255, 255, 0.3) 21px
+  );
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+footer svg {
+  margin-right: 20px;
+  position: relative;
+}
+
+footer a {
+  text-decoration: none;
+  color: var(--accent);
+  position: relative;
+}
+
+circle {
+  stroke-dashoffset: 0;
+  stroke-width: 15%;
+  fill: none;
 }

@@ -51,15 +51,15 @@
     background-color: #848484;
 }
 .current {
-    background-color: #97636d;
+    background-color: #ffbb00;
 }
 .current div {
-    background-color: #b5838d;
+    background-color: #fad457;
 }
 
 .done {
-    background-color: #ad8a82;
+    background-color: #9900ff;
 }
 .done div {
-    background-color: #c9ada7;
+    background-color: #a958ff;
 }

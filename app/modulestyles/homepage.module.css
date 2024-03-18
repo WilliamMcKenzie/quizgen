@@ -1,0 +1,28 @@
+.svg_blend {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  z-index: -1;
+}
+
+.submit_bar {
+  outline: none;
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-color: rgb(242, 245, 247);
+  color: #545253;
+  transition: 0.2s;
+  border-radius: 7px;
+}
+.submit_bar:focus {
+  border: 2px solid var(--yellow);
+  background-color: #f9f6ef;
+  color: #988879 !important;
+}
+.submit_bar:disabled {
+  background-color: rgb(243, 243, 243);
+  color: #7c7a7b;
+}

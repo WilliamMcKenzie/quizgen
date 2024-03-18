@@ -58,7 +58,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
             {
               correctAnswer != -1 ? (
                 <button
-                  className={styles.check_button}
+                  className={`${styles.check_button} ${styles.continue_button}`}
                   onClick={() => {
                     setSA(-1)
                     setCA(-1)
