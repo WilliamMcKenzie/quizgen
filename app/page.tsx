@@ -51,18 +51,18 @@ export default function Home() {
   }, []);
 
   async function fetchUser() {
-    if (getCookie("email") && getCookie("password")) {
-      setID("LOADING")
-      const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
+    // if (getCookie("email") && getCookie("password")) {
+    //   setID("LOADING")
+    //   const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
 
-      if (fetchUser.id) {
-        setID(fetchUser.id)
-      }
-      else {
-        setID("")
-        window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
-      }
-    }
+    //   if (fetchUser.id) {
+    //     setID(fetchUser.id)
+    //   }
+    //   else {
+    //     setID("")
+    //     window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
+    //   }
+    // }
   }
   async function goToCourse(course: string) {
     const createdCourse = await fetcher(`/api/uploadCourse?course=${course}`, undefined)
@@ -179,11 +179,11 @@ export default function Home() {
               />
             </div>
             <button
-              className={`rounded border border-black dark:border-white p-2 text-xl mt-6 ${styles.blob_button}`}
+              className={`rounded border border-black dark:border-white p-2 text-xl mt-6 ${styles.continue_button}`}
               onClick={continueWithEmail}
               disabled={loading}
             >
-              Continue
+              CONTINUE
             </button></motion.div>}
     </div>
   );

@@ -9,6 +9,13 @@
   z-index: -1;
 }
 
+.continue_button {
+  background-color: var(--yellow);
+  color: var(--white);
+  border: 3px solid transparent;
+  font-weight: 500;
+}
+
 .submit_bar {
   outline: none;
   border: 2px solid rgba(0, 0, 0, 0);
