@@ -51,18 +51,18 @@ export default function Home() {
   }, []);
 
   async function fetchUser() {
-    // if (getCookie("email") && getCookie("password")) {
-    //   setID("LOADING")
-    //   const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
+    if (getCookie("email") && getCookie("password")) {
+      setID("LOADING")
+      const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
 
-    //   if (fetchUser.id) {
-    //     setID(fetchUser.id)
-    //   }
-    //   else {
-    //     setID("")
-    //     window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
-    //   }
-    // }
+      if (fetchUser.id) {
+        setID(fetchUser.id)
+      }
+      else {
+        setID("")
+        window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
+      }
+    }
   }
   async function goToCourse(course: string) {
     const createdCourse = await fetcher(`/api/uploadCourse?course=${course}`, undefined)
