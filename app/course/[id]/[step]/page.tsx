@@ -27,7 +27,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
 
   async function goToCourse() {
     setStep({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
-    await fetcher(`/api/updateCourse?id=${courseID}`, undefined)
+    await fetcher(`/api/updateCourse?id=${courseID}&q=${step.questions.length}&c=${score}`, undefined)
     router.push(`/course/${courseID}`);
   }
   async function fetchCourseInit(){

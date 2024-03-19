@@ -7,6 +7,7 @@ import { IconButton, Step } from "@mui/material";
 import styles from './course.module.css'
 import LoadingScreen from "@/app/components/loading_screen";
 import { motion } from "framer-motion";
+import FinishScreen from "@/app/components/finish_screen";
 
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
@@ -18,7 +19,10 @@ export default function Course({ params }: { params: { id: string } }) {
   const courseID = params.id;
   const [course, setCourse] = useState([]);
   const [curStep, setStep] = useState(0);
+  const [ratio, setRatio] = useState(0);
   const margins = [-70,70]
+
+  const [showFinishScreen, setSFS] = useState(false)
 
   useEffect(() => {
     fetchCourseInit()
@@ -29,7 +33,12 @@ export default function Course({ params }: { params: { id: string } }) {
     setCourse(JSON.parse(fetchedCourse.content))
     setStep(JSON.parse(fetchedCourse.curStep))
 
-    if(JSON.parse(fetchedCourse.curStep) >= JSON.parse(fetchedCourse.content).length) router.push(`/`);
+    var t = parseInt(JSON.parse(fetchedCourse.totalQuestions))
+    var c = parseInt(JSON.parse(fetchedCourse.correctAnswers))
+    setRatio(c/t)
+
+    if(JSON.parse(fetchedCourse.curStep) >= JSON.parse(fetchedCourse.content).length) setSFS(true);
+    console.log(c/t)
   }
 
   async function goToStep(index: number) {
@@ -39,9 +48,11 @@ export default function Course({ params }: { params: { id: string } }) {
     }
   }
 
+  // router.push(`/`)
+
   return (
     <main className={`${styles.container} main_font`}>
-        {course[0] ? <>
+        {showFinishScreen ? <FinishScreen rank={ratio < 0.5 ? "ROOKIE" : ratio < 0.75 ? "NOVICE" : ratio < 0.9 ? "EXPERT" : "CERTIFIED BADASS"}></FinishScreen> : course[0] ? <>
           <button className="absolute top-10 left-10 text-3xl" onClick={() => {router.push(`/`);}}>
               {"BACK"}
           </button>

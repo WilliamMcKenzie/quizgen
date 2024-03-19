@@ -28,6 +28,9 @@ model Course {
   content String
   curStep Int
 
+  totalQuestions Int
+  correctAnswers Int
+
   courseID String @db.ObjectId
   users User @relation(fields: [courseID], references: [id])
 }
