@@ -5,25 +5,40 @@ const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
-    const courseID = searchParams.get('id')!
+    const userID = searchParams.get('uid')!
+    const courseID = searchParams.get('cid')!
+
     const newQuestions = parseInt(searchParams.get('q')!)
     const correctAnswers = parseInt(searchParams.get('c')!)
+    const step = parseInt(searchParams.get('step')!)+1
 
-    const curCourse = await prisma.course.findFirst({
+    const curUser = await prisma.user.findFirst({
         where: {
-            id: courseID
+            id: userID
         }
     });
-    const updatedCourse = await prisma.course.update({
+
+    var tempCD
+    if (JSON.parse(curUser!.courseDetails)) {
+        tempCD = JSON.parse(curUser!.courseDetails)
+    } else {
+        tempCD = {}
+    }
+    tempCD[courseID] = {
+        q: (tempCD[courseID]?.q ?? 0) + newQuestions,
+        c: (tempCD[courseID]?.c ?? 0) + correctAnswers,
+        step: step
+      };
+
+
+    const updatedUser = await prisma.user.update({
         where: {
-            id: courseID
+            id: userID
         },
         data: {
-            curStep: (curCourse?.curStep!)+1,
-            totalQuestions: (curCourse?.totalQuestions!)+newQuestions,
-            correctAnswers: (curCourse?.correctAnswers!)+correctAnswers,
+            courseDetails: JSON.stringify(tempCD)
         }
     });
 
-    return NextResponse.json(updatedCourse)
+    return NextResponse.json(updatedUser)
 }

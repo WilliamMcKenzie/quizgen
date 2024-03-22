@@ -12,7 +12,7 @@ const font_init = Anek_Bangla({
 });
 
 export const metadata: Metadata = {
-  title: "Course Gen",
+  title: "Quiz Gen",
   description: "Generate, lightening fast.",
 };
 

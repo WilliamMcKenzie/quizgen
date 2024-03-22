@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
     const createdUser = await prisma.user.create({
         data: {
             email: email,
-            password: password
+            password: password,
+            courseDetails: "{}"
         }
     });
 

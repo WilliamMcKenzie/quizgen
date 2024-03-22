@@ -10,12 +10,28 @@ import LoadingScreen from "@/app/components/loading_screen";
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
 };
+function getCookie(cname: string) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return null;
+}
 
 export default function Step({ params }: { params: { id: string, step: number } }) {
   const router = useRouter();
   const courseID = params.id;
   const curStepNUM = params.step;
 
+  const [user, setUser] = useState({ id: null})
   const [step, setStep] = useState({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
   const [question, setQuestion] = useState(0)
   const [score, setScore] = useState(0)
@@ -27,15 +43,24 @@ export default function Step({ params }: { params: { id: string, step: number } 
 
   async function goToCourse() {
     setStep({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
-    await fetcher(`/api/updateCourse?id=${courseID}&q=${step.questions.length}&c=${score}`, undefined)
+    const newUser = await fetcher(`/api/updateCourse?uid=${user.id}&cid=${courseID}&q=${step.questions.length}&c=${score}&step=${curStepNUM}`, undefined)
+    document.cookie = `user=${JSON.stringify(newUser)}; path=/`
     router.push(`/course/${courseID}`);
   }
   async function fetchCourseInit(){
     const fetchedCourse = await fetcher(`/api/fetchCourse?id=${courseID}`, undefined)
     setStep(JSON.parse(fetchedCourse.content)[curStepNUM])
   }
+  function fetchUser(){
+    if(getCookie("user")){
+      return JSON.parse(getCookie("user")!)
+    }
+  
+    return false
+  }
   useEffect(() => {
     fetchCourseInit()
+    fetchUser() ? setUser(fetchUser()) : router.push("/")
   }, []);
 
   return (<div className={`${styles.container} main_font`}>

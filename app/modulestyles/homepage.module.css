@@ -15,6 +15,12 @@
   border: 3px solid transparent;
   font-weight: 500;
 }
+.continue_button:disabled {
+  background-color: rgb(195, 212, 223);
+  color: var(--white);
+  border: 3px solid transparent;
+  font-weight: 500;
+}
 
 .submit_bar {
   outline: none;

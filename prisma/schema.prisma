@@ -18,6 +18,8 @@ model User {
   password String
   email String @unique
   userID String[] @db.ObjectId
+
+  courseDetails String
   courses Course[]
 }
 
@@ -26,10 +28,6 @@ model Course {
   
   name String
   content String
-  curStep Int
-
-  totalQuestions Int
-  correctAnswers Int
 
   courseID String @db.ObjectId
   users User @relation(fields: [courseID], references: [id])

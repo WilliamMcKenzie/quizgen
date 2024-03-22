@@ -11,9 +11,6 @@ export async function GET(request: NextRequest) {
         data: {
             name: course!.name,
             content: JSON.stringify(course!.content),
-            curStep: 0,
-            totalQuestions: 0,
-            correctAnswers: 0,
             users: {
                 connect: { id: "652e8627c5b93270f995b82e" }
             }

@@ -9,7 +9,7 @@ import SquareProgress from "./components/square_progress";
 import LoadingOverlay from "./components/loading_overlay";
 import KUTE from 'kute.js'
 import Footer from "./components/footer";
-import { ArrowForward } from "@mui/icons-material";
+import { ArrowForward, Menu } from "@mui/icons-material";
 
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
@@ -30,9 +30,6 @@ function getCookie(cname: string) {
   }
   return null;
 }
-function setCookie(cname: string) {
-  document.cookie = `id=${cname}; path=/`
-}
 
 export default function Home() {
   const [subject, setSubject] = useState("");
@@ -47,16 +44,29 @@ export default function Home() {
   useEffect(() => {
     var tween1 = KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
     var tween2 = KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
-    fetchUser()
+    fetchUser(false)
   }, []);
 
-  async function fetchUser() {
-    if (getCookie("email") && getCookie("password")) {
+  async function fetchUser(login : Boolean) {
+    if(login) {
+      setID("LOADING")
+      const fetchUser = await fetcher(`/api/fetchUser?password=${password}&email=${email}}`, undefined)
+
+      if (fetchUser.id) {
+        setID(fetchUser.id)
+      }
+      else {
+        setID("")
+        window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
+      }
+    }
+    else if (getCookie("email") && getCookie("password")) {
       setID("LOADING")
       const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
 
       if (fetchUser.id) {
         setID(fetchUser.id)
+        document.cookie = `user=${JSON.stringify(fetchUser)}; path=/`
       }
       else {
         setID("")
@@ -93,11 +103,12 @@ export default function Home() {
         createUser = await fetcher(`/api/createUser?password=${password}&email=${email}`, undefined)
       }
       catch (error) {
-        await fetchUser()
+        await fetchUser(true)
         return
       }
 
       setID(createUser.id)
+      document.cookie = `user=${JSON.stringify(createUser)}; path=/`
       document.cookie = `email=${createUser.email}; path=/`
       document.cookie = `password=${createUser.password}; path=/`
     }
@@ -105,6 +116,9 @@ export default function Home() {
 
   return (
     <div style={{overflow: "hidden", maxWidth: "100vw", maxHeight: "100vh"}} className={`min-h-screen mx-auto items-center justify-center flex flex-col main_font`}>
+      <IconButton aria-label="menu" size="large" sx={{position:"absolute", top:"10px", right:"10px"}}>
+        <Menu fontSize="inherit"/>
+      </IconButton>
       <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1>
       <h3 className="text-center mb-4 text-xl">Test your knowledge on anything.</h3>
       <svg className={styles.svg_blend} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -181,7 +195,7 @@ export default function Home() {
             <button
               className={`rounded border border-black dark:border-white p-2 text-xl mt-6 ${styles.continue_button}`}
               onClick={continueWithEmail}
-              disabled={loading}
+              disabled={password == "" || email == "" ? true : false}
             >
               CONTINUE
             </button></motion.div>}
