@@ -30,5 +30,5 @@ model Course {
   content String
 
   courseID String @db.ObjectId
-  users User @relation(fields: [courseID], references: [id])
+  users User? @relation(fields: [courseID], references: [id])
 }
