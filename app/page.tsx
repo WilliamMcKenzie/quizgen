@@ -116,9 +116,6 @@ export default function Home() {
 
   return (
     <div style={{overflow: "hidden", maxWidth: "100vw", maxHeight: "100vh"}} className={`min-h-screen mx-auto items-center justify-center flex flex-col main_font`}>
-      <IconButton aria-label="menu" size="large" sx={{position:"absolute", top:"10px", right:"10px"}}>
-        <Menu fontSize="inherit"/>
-      </IconButton>
       <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1>
       <h3 className="text-center mb-4 text-xl">Test your knowledge on anything.</h3>
       <svg className={styles.svg_blend} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -149,7 +146,13 @@ export default function Home() {
           <div className="flex justify-center items-center mt-6">
             <input
               value={subject}
+              type="text" 
+              spellCheck="false" 
+              autoComplete="off"
+              aria-autocomplete="none"
               onChange={(e) => setSubject(e.target.value)}
+              name="data_input_field_3"
+              id="data_input_field_3"
               placeholder="Enter a subject"
               className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
               disabled={loading}
@@ -178,6 +181,12 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
+                name="data_input_field_1"
+                id="data_input_field_1"
+                aria-autocomplete="none"
+                type="email"
+                spellCheck="false" 
+                autoComplete="off"
                 className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
                 disabled={loading}
               />
@@ -187,7 +196,12 @@ export default function Home() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
+                name="data_input_field_2"
+                id="data_input_field_2"
                 type="password"
+                aria-autocomplete="none"
+                spellCheck="false" 
+                autoComplete="off"
                 className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
                 disabled={loading}
               />
