@@ -82,7 +82,7 @@ export default function Home() {
   async function handleClick() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
-      const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
+      const generatedCourse1 = JSON.parse((await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)).choices[0].message.content)
       // const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
 
       // for(var step of generatedCourse2.content){
