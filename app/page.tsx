@@ -83,11 +83,11 @@ export default function Home() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
       const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
-      const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
+      // const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
 
-      for(var step of generatedCourse2.content){
-        generatedCourse1.content.push(step)
-      }
+      // for(var step of generatedCourse2.content){
+      //   generatedCourse1.content.push(step)
+      // }
 
       setCourse(JSON.stringify(generatedCourse1))
       goToCourse(JSON.stringify(generatedCourse1))
@@ -147,12 +147,11 @@ export default function Home() {
             <input
               value={subject}
               type="text" 
-              spellCheck="false" 
+              spellCheck="false"
+              list="autocompleteOff" 
               autoComplete="off"
               aria-autocomplete="none"
               onChange={(e) => setSubject(e.target.value)}
-              name="data_input_field_3"
-              id="data_input_field_3"
               placeholder="Enter a subject"
               className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
               disabled={loading}
@@ -184,6 +183,7 @@ export default function Home() {
                 name="data_input_field_1"
                 id="data_input_field_1"
                 aria-autocomplete="none"
+                list="autocompleteOff"
                 type="email"
                 spellCheck="false" 
                 autoComplete="off"
@@ -199,6 +199,7 @@ export default function Home() {
                 name="data_input_field_2"
                 id="data_input_field_2"
                 type="password"
+                list="autocompleteOff"
                 aria-autocomplete="none"
                 spellCheck="false" 
                 autoComplete="off"
