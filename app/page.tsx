@@ -69,7 +69,7 @@ export default function Home() {
       }
       else {
         setID("")
-        window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
+        window.alert("Email already in use!")
       }
     }
     else if (getCookie("email") && getCookie("password")) {
