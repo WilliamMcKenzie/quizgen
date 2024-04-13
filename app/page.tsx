@@ -41,6 +41,18 @@ export default function Home() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress >= 95 ? 95 : prevProgress + 2.5));
+    }, 400);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   useEffect(() => {
     var tween1 = KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
     var tween2 = KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
@@ -82,7 +94,10 @@ export default function Home() {
   async function handleClick() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
+      setProgress(0);
       const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
+      setProgress((prevProgress) => (prevProgress >= 90 ? 98 : 90));
+
       var stack = generatedCourse1.split("0:")
 
       var course = ``
@@ -171,7 +186,7 @@ export default function Home() {
             </IconButton>
           </div>
           <div className="flex justify-center items-center mt-6 h-1">
-            {loading ? <LinearProgress sx={{ width: '100%' }} /> : <></>}
+            {loading ? <LinearProgress variant="determinate" value={progress} sx={{ width: '100%' }} /> : <></>}
           </div>
         </motion.div>
 
