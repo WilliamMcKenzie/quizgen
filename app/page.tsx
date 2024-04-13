@@ -82,15 +82,25 @@ export default function Home() {
   async function handleClick() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
-      const generatedCourse1 = JSON.parse((await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)).choices[0].message.content)
+      const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
+      var stack = generatedCourse1.split("0:")
+
+      var course = ``
+      for(var chunk of stack) {
+        try {course += JSON.parse(`{"char":${chunk}`.trimEnd() + "}").char;}
+        catch(error){
+        }
+      }
+      course.replace(/\n/g, '')
+      
       // const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
 
       // for(var step of generatedCourse2.content){
       //   generatedCourse1.content.push(step)
       // }
 
-      setCourse(JSON.stringify(generatedCourse1))
-      goToCourse(JSON.stringify(generatedCourse1))
+      setCourse(course)
+      goToCourse(course)
     }
     else window.alert("TOO LONG YOU FOOL")
   }
