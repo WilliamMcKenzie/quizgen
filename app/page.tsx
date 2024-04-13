@@ -45,7 +45,7 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 95 ? 95 : prevProgress + 2.5));
+      setProgress((prevProgress) => (prevProgress >= 100 ? 100 : prevProgress + 2.5));
     }, 400);
 
     return () => {
