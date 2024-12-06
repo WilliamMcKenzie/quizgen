@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+.svg_blend {
+  position: fixed;
+  top: -1vh;
+  left: -1vw;
+
+  width: 102vw;
+  height: 102vh;
+  pointer-events: none;
+}
+
+.mt-6-i {
+  margin-top: 1.5rem !important;
+}
+.w-auto-i {
+  width: 60% !important;
+}
 .main_font {
   font-family: var(--font-yomogi);
 }
@@ -47,6 +63,9 @@ body {
   background-color: var(--white);
 
   z-index: 10000;
+}
+.yellow_bg {
+  background: var(--yellow);
 }
 .box {
   width: 5vw;

@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${font_init.variable}`}>{children}</body>
+      <body className={``}>{children}</body>
     </html>
   );
 }

@@ -19,16 +19,17 @@ model User {
   email String @unique
   userID String[] @db.ObjectId
 
-  courseDetails String
-  courses Course[]
+  quizDetails String
+  quizes Quiz[]
 }
 
-model Course {
+model Quiz {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   
+  code String
   name String
   content String
 
-  courseID String? @db.ObjectId
-  users User? @relation(fields: [courseID], references: [id])
+  quizID String? @db.ObjectId
+  users User? @relation(fields: [quizID], references: [id])
 }

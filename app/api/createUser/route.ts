@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         data: {
             email: email,
             password: password,
-            courseDetails: "{}"
+            quizDetails: "{}"
         }
     });
 

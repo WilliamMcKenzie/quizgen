@@ -33,17 +33,19 @@ function getCookie(cname: string) {
 
 export default function Home() {
   const [subject, setSubject] = useState("");
-  const [course, setCourse] = useState("");
   const [loading, setLoading] = useState(false)
   const router = useRouter();
 
   const [id, setID] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
+    var tween1 = KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
+    var tween2 = KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
+    fetchUser(false)
+
     const timer = setInterval(() => {
       setProgress((prevProgress) => (prevProgress >= 100 ? 100 : prevProgress + 2.5));
     }, 400);
@@ -51,12 +53,6 @@ export default function Home() {
     return () => {
       clearInterval(timer);
     };
-  }, []);
-
-  useEffect(() => {
-    var tween1 = KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
-    var tween2 = KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
-    fetchUser(false)
   }, []);
 
   async function fetchUser(login : Boolean) {
@@ -86,39 +82,33 @@ export default function Home() {
       }
     }
   }
-  async function goToCourse(course: string) {
-    const createdCourse = await fetcher(`/api/uploadCourse?course=${course}`, undefined)
-    router.push(`/course/${createdCourse.id}`);
+
+  async function goToQuiz(quiz: string) {
+    const createdQuiz = await fetcher(`/api/uploadQuiz?quiz=${quiz}`, undefined)
+    router.push(`/quiz/${createdQuiz.code}`);
   }
 
   async function handleClick() {
     setLoading(true)
     if (id != "" && subject.length < 50) {
       setProgress(0);
-      const generatedCourse1 = await fetcher(`/api/generateCourse1?prompt=${subject}`, undefined)
+      const generatedQuiz = await fetcher(`/api/generateQuiz?prompt=${subject}`, undefined)
       setProgress((prevProgress) => (prevProgress >= 90 ? 98 : 90));
 
-      var stack = generatedCourse1.split("0:")
+      var stack = generatedQuiz.split("0:")
 
-      var course = ``
+      var quiz = ``
       for(var chunk of stack) {
-        try {course += JSON.parse(`{"char":${chunk}`.trimEnd() + "}").char;}
+        try {quiz += JSON.parse(`{"char":${chunk}`.trimEnd() + "}").char;}
         catch(error){
         }
       }
-      course.replace(/\n/g, '')
-      
-      // const generatedCourse2 = await fetcher(`/api/generateCourse2?prompt=${JSON.stringify(generatedCourse1)}`, undefined)
-
-      // for(var step of generatedCourse2.content){
-      //   generatedCourse1.content.push(step)
-      // }
-
-      setCourse(course)
-      goToCourse(course)
+      quiz.replace(/\n/g, '')
+      goToQuiz(quiz)
     }
     else window.alert("TOO LONG YOU FOOL")
   }
+
   async function continueWithEmail() {
     if (password != "" && email != "") {
       var createUser
@@ -143,7 +133,7 @@ export default function Home() {
     <div style={{overflow: "hidden", maxWidth: "100vw", maxHeight: "100vh"}} className={`min-h-screen mx-auto items-center justify-center flex flex-col main_font`}>
       <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1>
       <h3 className="text-center mb-4 text-xl">Test your knowledge on anything.</h3>
-      <svg className={styles.svg_blend} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <svg className={"svg_blend"} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
         <g transform="translate(900, 600)">
           <path id="top1" d="M-270.4 0C-256 -20.7 -241.5 -41.4 -234.7 -62.9C-227.9 -84.4 -228.7 -106.6 -221.7 -128C-214.7 -149.4 -199.9 -169.9 -180.3 -180.3C-160.8 -190.7 -136.5 -190.9 -118.5 -205.2C-100.5 -219.6 -88.7 -248 -70 -261.2C-51.3 -274.4 -25.6 -272.4 0 -270.4L0 0Z" fill="#ff0066"></path>
         </g>
@@ -159,7 +149,7 @@ export default function Home() {
       </svg>
       {id == "LOADING" ? <LoadingOverlay></LoadingOverlay> : <></>}
 
-      {//When signed in
+      {
         id != "" && id != "LOADING" ? <motion.div className="flex flex-col"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -169,6 +159,7 @@ export default function Home() {
             ease: [0, 0.71, 0.2, 1.01]
           }}>
           <div className="flex justify-center items-center mt-6">
+          <label className="input input-bordered flex items-center gap-2">
             <input
               value={subject}
               type="text" 
@@ -178,12 +169,16 @@ export default function Home() {
               aria-autocomplete="none"
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Enter a subject"
-              className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
               disabled={loading}
             />
-            <IconButton aria-label="add an alarm" onClick={handleClick} disabled={loading}>
-              <ArrowForward />
-            </IconButton>
+
+            <button onClick={handleClick} disabled={loading}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 opacity-70">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </button>
+          </label>
+            
           </div>
           <div className="flex justify-center items-center mt-6 h-1">
             {loading ? <LinearProgress variant="determinate" value={progress} sx={{ width: '100%' }} /> : <></>}
@@ -192,7 +187,6 @@ export default function Home() {
 
           :
 
-          //When signed out
           <motion.div className="flex justify-center items-center mt-6 flex-col"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -212,7 +206,7 @@ export default function Home() {
                 type="email"
                 spellCheck="false" 
                 autoComplete="off"
-                className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
+                className={`input input-bordered w-full max-w-xs`}
                 disabled={loading}
               />
             </div>
@@ -228,12 +222,12 @@ export default function Home() {
                 aria-autocomplete="none"
                 spellCheck="false" 
                 autoComplete="off"
-                className={`rounded border p-2 mr-2 text-black text-xl ${styles.submit_bar}`}
+                className={`input input-bordered w-full max-w-xs`}
                 disabled={loading}
               />
             </div>
             <button
-              className={`rounded border border-black dark:border-white p-2 text-xl mt-6 ${styles.continue_button}`}
+              className={`btn btn-primary mt-6`}
               onClick={continueWithEmail}
               disabled={password == "" || email == "" ? true : false}
             >

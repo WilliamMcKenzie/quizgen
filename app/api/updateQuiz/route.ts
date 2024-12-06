@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const userID = searchParams.get('uid')!
-    const courseID = searchParams.get('cid')!
+    const quizID = searchParams.get('qid')!
 
     const newQuestions = parseInt(searchParams.get('q')!)
     const correctAnswers = parseInt(searchParams.get('c')!)
@@ -18,17 +18,17 @@ export async function GET(request: NextRequest) {
         }
     });
 
-    var tempCD
-    if (JSON.parse(curUser!.courseDetails)) {
-        tempCD = JSON.parse(curUser!.courseDetails)
+    var tempQuizDetails
+    if (JSON.parse(curUser!.quizDetails)) {
+        tempQuizDetails = JSON.parse(curUser!.quizDetails)
     } else {
-        tempCD = {}
+        tempQuizDetails = {}
     }
-    tempCD[courseID] = {
-        q: (tempCD[courseID]?.q ?? 0) + newQuestions,
-        c: (tempCD[courseID]?.c ?? 0) + correctAnswers,
+    tempQuizDetails[quizID] = {
+        q: (tempQuizDetails[quizID]?.q ?? 0) + newQuestions,
+        c: (tempQuizDetails[quizID]?.c ?? 0) + correctAnswers,
         step: step
-      };
+    };
 
 
     const updatedUser = await prisma.user.update({
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
             id: userID
         },
         data: {
-            courseDetails: JSON.stringify(tempCD)
+            quizDetails: JSON.stringify(tempQuizDetails)
         }
     });
 

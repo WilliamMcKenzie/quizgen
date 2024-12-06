@@ -28,7 +28,7 @@ function getCookie(cname: string) {
 
 export default function Step({ params }: { params: { id: string, step: number } }) {
   const router = useRouter();
-  const courseID = params.id;
+  const quizID = params.id;
   const curStepNUM = params.step;
 
   const [user, setUser] = useState({ id: null})
@@ -41,15 +41,15 @@ export default function Step({ params }: { params: { id: string, step: number } 
 
   const [disableButtons, setDB] = useState(false)
 
-  async function goToCourse() {
+  async function goToQuiz() {
     setStep({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
-    const newUser = await fetcher(`/api/updateCourse?uid=${user.id}&cid=${courseID}&q=${step.questions.length}&c=${score}&step=${curStepNUM}`, undefined)
+    const newUser = await fetcher(`/api/updateQuiz?uid=${user.id}&qid=${quizID}&q=${step.questions.length}&c=${score}&step=${curStepNUM}`, undefined)
     document.cookie = `user=${JSON.stringify(newUser)}; path=/`
-    router.push(`/course/${courseID}`);
+    router.push(`/quiz/${quizID}`);
   }
-  async function fetchCourseInit(){
-    const fetchedCourse = await fetcher(`/api/fetchCourse?id=${courseID}`, undefined)
-    setStep(JSON.parse(fetchedCourse.content)[curStepNUM])
+  async function fetchQuizInit(){
+    const fetchedQuiz = await fetcher(`/api/fetchQuiz?id=${quizID}`, undefined)
+    setStep(JSON.parse(fetchedQuiz.content)[curStepNUM])
   }
   function fetchUser(){
     if(getCookie("user")){
@@ -59,7 +59,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
     return false
   }
   useEffect(() => {
-    fetchCourseInit()
+    fetchQuizInit()
     fetchUser() ? setUser(fetchUser()) : router.push("/")
   }, []);
 
@@ -71,7 +71,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
           <p style={{marginBottom:'100px', marginTop:'10px'}} className="main_font">{step.questions[question].question}</p>
           <div className={styles.selection_box}>
             {step.questions[question].responses.map((response, index) => (
-              <button disabled={disableButtons} className={correctAnswer == index ? styles.correct_answer : correctAnswer >= 0 && selectedAnswer == index ? styles.wrong_answer : selectedAnswer == index ? styles.selected_button : "NULL"} key={index}
+              <button disabled={disableButtons} className={"input input-bordered " + (correctAnswer == index ? styles.correct_answer : correctAnswer >= 0 && selectedAnswer == index ? styles.wrong_answer : selectedAnswer == index ? styles.selected_button : "NULL")} key={index}
                 onClick={() => {
                   setSA(index)
                 }}
@@ -83,7 +83,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
             {
               correctAnswer != -1 ? (
                 <button
-                  className={`${styles.check_button} ${styles.continue_button}`}
+                  className={`btn btn-secondary mt-6-i w-auto-i`}
                   onClick={() => {
                     setSA(-1)
                     setCA(-1)
@@ -97,7 +97,7 @@ export default function Step({ params }: { params: { id: string, step: number } 
               ) : (
                 <button
                   disabled={selectedAnswer >= 0 ? false : true}
-                  className={styles.check_button}
+                  className={`btn btn-primary mt-6-i w-auto-i`}
                   onClick={() => {
                     if (selectedAnswer === step.questions[question].correctIndex) {
                       //correct
@@ -117,8 +117,8 @@ export default function Step({ params }: { params: { id: string, step: number } 
         </>
       ) : (
         <>
-          <button className={styles.done_button} onClick={() => goToCourse()}>
-            Your score is {score} out of {step.questions.length}
+          <button className={`btn btn-accent`} onClick={() => goToQuiz()}>
+            YOUR SCORE IS {score} OUT OF {step.questions.length}
           </button>
         </>
       )}

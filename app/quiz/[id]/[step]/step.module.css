@@ -17,14 +17,10 @@
     background-color: #def4ff !important;
     color: #69b5dc !important;
 
-    border: 1px solid #a7e2ff !important;
-    border-bottom: 2px solid #a7e2ff !important;
+    border-color: #a7e2ff !important;
 }
 .selected_button a {
     color: #69b5dc !important;
-
-    border: 1px solid #a7e2ff !important;
-    border-bottom: 2px solid #a7e2ff !important;
 }
 .selection_box button {
     padding: 10px;
@@ -35,14 +31,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background-color: white;
-    color: #a1a1a1;
-    font-weight: 500;
-
-    border: 1px solid #e5e5e5;
-    border-bottom: 2px solid #e5e5e5;
-    border-radius: 10px;
 }
 .selection_box button:hover {
     filter: brightness(0.96);
@@ -61,13 +49,6 @@
     align-items: center;
     width: 2rem;
     height:  2rem;
-
-    color: #bdbcbc;
-    font-weight: 500;
-
-    border: 1px solid #e5e5e5;
-    border-bottom: 2px solid #e5e5e5;
-    border-radius: 10px;
 }
 .check_button {
     width: fit-content !important;
@@ -108,25 +89,17 @@
     background-color: #e0ffde !important;
     color: #69dc6f !important;
 
-    border: 1px solid #a7ffba !important;
-    border-bottom: 2px solid #a7ffba !important;
+    border-color: #a7ffba !important;
 }
 .correct_answer a {
     color: #69dc6f !important;
-
-    border: 1px solid #a7ffba !important;
-    border-bottom: 2px solid #a7ffba !important;
 }
 .wrong_answer {
     background-color: #ffdede !important;
     color: #dc6969 !important;
 
-    border: 1px solid #ffa7a7 !important;
-    border-bottom: 2px solid #ffa7a7 !important;
+    border-color: #ffa7a7 !important;
 }
 .wrong_answer a {
     color: hsl(0, 62%, 64%) !important;
-
-    border: 1px solid #ffa7a7 !important;
-    border-bottom: 2px solid #ffa7a7 !important;
 }

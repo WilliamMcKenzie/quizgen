@@ -5,13 +5,12 @@ const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
-    const course = JSON.parse(searchParams.get('course')!)
-    const createdCourse = await prisma.course.create({
-        data: {
-            name: course!.name,
-            content: JSON.stringify(course!.content)
+    const quizID = searchParams.get('id')!
+    const fetchedQuiz = await prisma.quiz.findFirst({
+        where: {
+            code: quizID
         }
     });
 
-    return NextResponse.json(createdCourse)
+    return NextResponse.json(fetchedQuiz)
 }
