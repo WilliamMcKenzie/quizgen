@@ -1,7 +1,7 @@
 "use client";
 import { CheckCircle, Circle, Stars } from "@mui/icons-material";
 import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { IconButton, Step } from "@mui/material";
 import styles from './quiz.module.css'
@@ -32,6 +32,7 @@ function getCookie(cname: string) {
 export default function Quiz({ params }: { params: { id: string } }) {
   const router = useRouter();
 
+  const modalRef = useRef<HTMLDialogElement>(null);
   const quizID = params.id;
   const [quiz, setQuiz] = useState([]);
   const [quizName, setQuizName] = useState("");
@@ -97,13 +98,19 @@ export default function Quiz({ params }: { params: { id: string } }) {
             <div className="text-center mb-4 text-3xl font-bold">
               {quizName.toUpperCase()}
             </div>
-            <button className="btn ml-auto mr-5" onClick={()=>document.getElementById('share_modal')?.showModal()}>
+            <button className="btn ml-auto mr-5" onClick={
+                () => {
+                  if (modalRef.current) {
+                    modalRef.current?.showModal()
+                  }
+                }
+              }>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
               </svg>
             </button>
           </div>
-          <dialog id="share_modal" className="modal">
+          <dialog ref={modalRef} id="share_modal" className="modal">
             <div className="modal-box" style={{maxWidth: "fit-content"}}>
               <h3 className="font-bold text-lg">Share</h3>
               <div className="stats">
