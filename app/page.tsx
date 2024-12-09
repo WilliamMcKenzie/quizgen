@@ -1,6 +1,6 @@
 "use client";
 import axios, { AxiosRequestConfig } from "axios";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
 import LoadingOverlay from "./components/loading_overlay";
@@ -42,7 +42,7 @@ export default function Home() {
   const [code, setCode] = useState("")
   const [fetching, setFetching] = useState(false)
 
-  const searchParams = useSearchParams()
+  const searchParams = new URLSearchParams(window.location.search)
 
   useEffect(() => {
     KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
