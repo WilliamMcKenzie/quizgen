@@ -36,10 +36,11 @@ export default function Quiz({ params }: { params: { id: string } }) {
   const quizID = params.id;
   const [quiz, setQuiz] = useState([]);
   const [quizName, setQuizName] = useState("");
+  const [ranking, setRanking] = useState({})
   const [curStep, setStep] = useState(0);
-  const [user, setUser] = useState({ quizDetails : { "" : { q : 0, c : 0 } }})
+  const [user, setUser] = useState({ email : "", quizDetails : { "" : { q : 0, c : 0 } }})
 
-  const [ratio, setRatio] = useState(0);
+  const [ratio, setRatio] = useState([0,0]);
   const margins = [-70,70]
 
   const [showFinishScreen, setSFS] = useState(false)
@@ -54,28 +55,34 @@ export default function Quiz({ params }: { params: { id: string } }) {
 
   async function fetchUser(){
     const fetchedQuiz = await fetcher(`/api/fetchQuiz?id=${quizID}`, undefined)
-    setQuiz(JSON.parse(fetchedQuiz.content))
-    setQuizName(fetchedQuiz.name)
-
-    if(getCookie("user")){
-      setUser(JSON.parse(getCookie("user")!))
-      if(JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]){
-        var quizJSON = JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]
-        setStep(quizJSON.step)
-
-        console.log(quizJSON.step + "    " + JSON.parse(fetchedQuiz.content).length)
-        if(quizJSON.step >= JSON.parse(fetchedQuiz.content).length) setSFS(true);
-        
-        var t = quizJSON.q
-        var c = quizJSON.c
-        setRatio(c/t)
-      } 
-      else {
-        const newStep = await fetcher(`/api/updateQuiz?uid=${JSON.parse(getCookie("user")!).id}&cid=${quizID}&q=0&c=0&step=-1`, undefined)
-        document.cookie = `user=${JSON.stringify(newStep)}; path=/`
-      }
-    } else {
+    if (!fetchedQuiz) {
       router.push("/")
+    }
+    else {
+      setQuiz(JSON.parse(fetchedQuiz.content))
+      setQuizName(fetchedQuiz.name)
+      setRanking(fetchedQuiz.ranking)
+
+      if(getCookie("user")){
+        setUser(JSON.parse(getCookie("user")!))
+        if(JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]){
+          var quizJSON = JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]
+          setStep(quizJSON.step)
+
+          console.log(quizJSON.step + "    " + JSON.parse(fetchedQuiz.content).length)
+          if(quizJSON.step >= JSON.parse(fetchedQuiz.content).length) setSFS(true);
+          
+          var t = quizJSON.q
+          var c = quizJSON.c
+          setRatio([c, t])
+        } 
+        else {
+          const newStep = await fetcher(`/api/updateQuiz?uid=${JSON.parse(getCookie("user")!).id}&qid=${quizID}&q=0&c=0&step=-1`, undefined)
+          document.cookie = `user=${JSON.stringify(newStep)}; path=/`
+        }
+      } else {
+        router.push("/?go="+quizID)
+      }
     }
   }
 
@@ -88,14 +95,14 @@ export default function Quiz({ params }: { params: { id: string } }) {
 
   return (
     <main className={`${styles.container} main_font`}>
-        {showFinishScreen ? <FinishScreen rank={ratio < 0.5 ? "ROOKIE" : ratio < 0.75 ? "NOVICE" : ratio < 0.9 ? "EXPERT" : "CERTIFIED BADASS"}></FinishScreen> : quiz[0] ? <>
+        {showFinishScreen ? <FinishScreen userEmail={user.email} ranking={ranking} rank={ratio[0]/ratio[1] < 0.5 ? "ROOKIE" : ratio[0]/ratio[1] < 0.75 ? "NOVICE" : ratio[0]/ratio[1] < 0.9 ? "EXPERT" : "CERTIFIED BADASS"}></FinishScreen> : quiz[0] ? <>
           <div className="absolute top-5 w-full text-3xl flex items-center">
             <button className="btn mr-auto ml-5" onClick={() => {router.push(`/`)}}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
               </svg>
             </button>
-            <div className="text-center mb-4 text-3xl font-bold">
+            <div className="text-center text-3xl font-bold">
               {quizName.toUpperCase()}
             </div>
             <button className="btn ml-auto mr-5" onClick={

@@ -20,7 +20,7 @@ model User {
   userID String[] @db.ObjectId
 
   quizDetails String
-  quizes Quiz[]
+  quizzes Quiz[]
 }
 
 model Quiz {
@@ -29,6 +29,7 @@ model Quiz {
   code String
   name String
   content String
+  ranking Json
 
   quizID String? @db.ObjectId
   users User? @relation(fields: [quizID], references: [id])

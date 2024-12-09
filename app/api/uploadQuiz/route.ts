@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
         data: {
             name: quiz!.quiz_name,
             code: generateCode(),
+            ranking: {},
             content: JSON.stringify(quiz!.content)
         }
     });
@@ -19,8 +20,8 @@ export async function GET(request: NextRequest) {
 
 function generateCode() {
     var result = ""
-    for (var i = 0; i < 6; i++) {
-        if (i % 3 == 0) {
+    for (var i = 0; i < 5; i++) {
+        if (Math.random() * 10 > 7) {
             result += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*27)]
         }
         else {

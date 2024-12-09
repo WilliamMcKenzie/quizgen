@@ -1,15 +1,11 @@
 "use client";
 import axios, { AxiosRequestConfig } from "axios";
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from "react";
-import { IconButton, LinearProgress } from "@mui/material";
-import styles from './modulestyles/homepage.module.css'
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
-import SquareProgress from "./components/square_progress";
 import LoadingOverlay from "./components/loading_overlay";
 import KUTE from 'kute.js'
-import Footer from "./components/footer";
-import { ArrowForward, Menu } from "@mui/icons-material";
+import { LinearProgress } from "@mui/material";
 
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
@@ -32,18 +28,25 @@ function getCookie(cname: string) {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [subject, setSubject] = useState("");
   const [loading, setLoading] = useState(false)
-  const router = useRouter();
-
+  const modalRef = useRef<HTMLDialogElement>(null);
+  
   const [id, setID] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [progress, setProgress] = useState(0)
 
+  const [codeError, setCodeError] = useState(false)
+  const [code, setCode] = useState("")
+  const [fetching, setFetching] = useState(false)
+
+  const searchParams = useSearchParams()
+
   useEffect(() => {
-    var tween1 = KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
-    var tween2 = KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
+    KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
+    KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
     fetchUser(false)
 
     const timer = setInterval(() => {
@@ -56,30 +59,29 @@ export default function Home() {
   }, []);
 
   async function fetchUser(login : Boolean) {
-    if(login) {
-      setID("LOADING")
-      const fetchUser = await fetcher(`/api/fetchUser?password=${password}&email=${email}}`, undefined)
+    var _email = email
+    var _password = password
 
-      if (fetchUser.id) {
-        setID(fetchUser.id)
-      }
-      else {
-        setID("")
-        window.alert("Email already in use!")
+    if (!login && getCookie("email") && getCookie("password")) {
+      _email = getCookie("email")!
+      _password = getCookie("password")!
+    }
+    else if (!login) {
+      return
+    }
+
+    setID("LOADING")
+    const fetchUser = await fetcher(`/api/fetchUser?password=${_password}&email=${_email}`, undefined)
+
+    if (fetchUser.id) {
+      setID(fetchUser.id)
+
+      if (searchParams.has("go")) {
+        router.push(`/quiz/${searchParams.get("go")}`);
       }
     }
-    else if (getCookie("email") && getCookie("password")) {
-      setID("LOADING")
-      const fetchUser = await fetcher(`/api/fetchUser?password=${getCookie("password")}&email=${getCookie("email")}`, undefined)
-
-      if (fetchUser.id) {
-        setID(fetchUser.id)
-        document.cookie = `user=${JSON.stringify(fetchUser)}; path=/`
-      }
-      else {
-        setID("")
-        window.alert("INVALID ERRORROROR SERVER ERROR: REASON: braincells <= 0")
-      }
+    else {
+      setID("")
     }
   }
 
@@ -121,16 +123,79 @@ export default function Home() {
         await fetchUser(true)
         return
       }
-
+      
       setID(createUser.id)
       document.cookie = `user=${JSON.stringify(createUser)}; path=/`
       document.cookie = `email=${createUser.email}; path=/`
       document.cookie = `password=${createUser.password}; path=/`
+
+      if (searchParams.has("go")) {
+        router.push(`/quiz/${searchParams.get("go")}`);
+      }
     }
   }
 
   return (
     <div style={{overflow: "hidden", maxWidth: "100vw", maxHeight: "100vh"}} className={`min-h-screen mx-auto items-center justify-center flex flex-col main_font`}>
+      <dialog ref={modalRef} className="modal">
+        <div className="modal-box" style={{width: "40vh"}}>
+          <h3 className="font-bold text-lg">Join</h3>
+          { !codeError ?  <p className="py-4">Enter a 6 digit quiz code.</p> : <p className="py-4">Invalid code.</p>}
+          <label className={"input input-bordered flex items-center gap-2 " + (codeError ? "input-error" : "")}>
+            <input
+              value={code}
+              type="text" 
+              spellCheck="false"
+              list="autocompleteOff" 
+              autoComplete="off"
+              aria-autocomplete="none"
+              onChange={(e) => {
+                setCodeError(false)
+                setCode(e.target.value.toUpperCase())
+              }}
+              placeholder="XXXXXX"
+              disabled={fetching}
+            />
+
+            <button className="ml-auto" onClick={async () => {
+              setFetching(true)
+              const fetchedQuiz = await fetcher(`/api/fetchQuiz?id=${code}`, undefined)
+              setFetching(false)
+              if (fetchedQuiz) {
+                router.push(`/quiz/${code.toUpperCase()}`);
+              }
+              else {
+                setCodeError(true)
+              }
+            }} disabled={loading}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 opacity-70">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </button>
+          </label>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+      <div className="absolute top-10 right-10">
+        <button className="btn btn-ghost" onClick={
+                () => {
+                  if (modalRef.current) {
+                    modalRef.current?.showModal()
+                  }
+                }
+              }>
+          Enter code
+        </button>
+        <button className="btn btn-ghost" onClick={
+                () => {
+                  router.push(`/quiz`);
+                }
+              }>
+          Your quizzes
+        </button>
+      </div>
       <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1>
       <h3 className="text-center mb-4 text-xl">Test your knowledge on anything.</h3>
       <svg className={"svg_blend"} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
