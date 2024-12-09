@@ -42,7 +42,7 @@ export default function Home() {
   const [code, setCode] = useState("")
   const [fetching, setFetching] = useState(false)
 
-  const searchParams = new URLSearchParams(window.location.search)
+  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "")
 
   useEffect(() => {
     KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
