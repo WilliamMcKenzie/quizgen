@@ -20,7 +20,6 @@ model User {
   userID String[] @db.ObjectId
 
   quizDetails String
-  quizzes Quiz[]
 }
 
 model Quiz {
@@ -30,7 +29,4 @@ model Quiz {
   name String
   content String
   ranking Json
-
-  quizID String? @db.ObjectId
-  users User? @relation(fields: [quizID], references: [id])
 }

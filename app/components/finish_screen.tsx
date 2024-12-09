@@ -71,7 +71,7 @@ export default function FinishScreen({ rank="", ranking={} as Record<string, any
               sortable.map((value, index) => {
                 var email = value[0]
                 var score = value[1][0]/value[1][1]*100
-                return <tr className={email == userEmail ? "bg-primary color-white" : ""}>
+                return <tr className={email == userEmail ? "bg-primary color-white" : ""} key={index}>
                   <th>{index == 0 ? "1st" : index == 1 ? "2nd" : (index+1).toString() + "rd"}</th>
                   <td>{email}</td>
                   <td>{Math.round(score)}%</td>
@@ -80,7 +80,7 @@ export default function FinishScreen({ rank="", ranking={} as Record<string, any
             }
             {
               Array.from({ length: Math.max(0, 6 - Object.keys(ranking).length) }).map((_, index) => (
-                <tr>
+                <tr key={index}>
                   <th style={{color: "transparent"}}>NULL</th>
                   <td></td>
                   <td></td>
