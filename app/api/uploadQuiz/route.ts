@@ -6,14 +6,27 @@ const prisma = new PrismaClient()
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const quiz = JSON.parse(searchParams.get('quiz')!)
+    const authorID = searchParams.get('author')
     const createdQuiz = await prisma.quiz.create({
         data: {
             name: quiz!.quiz_name,
             code: generateCode(),
             ranking: {},
-            content: JSON.stringify(quiz!.content)
+            content: JSON.stringify(quiz!.content),
         }
     });
+    await prisma.user.update({
+        where: {
+            id: authorID!,
+        },
+        data: {
+            quizzes: {
+                connect: {
+                    id: createdQuiz.id,
+                },
+            },
+        },
+    })
 
     return NextResponse.json(createdQuiz)
 }

@@ -83,16 +83,17 @@ export default function Home() {
     else {
       setID("")
     }
+    return fetchUser
   }
 
   async function goToQuiz(quiz: string) {
-    const createdQuiz = await fetcher(`/api/uploadQuiz?quiz=${quiz}`, undefined)
+    const createdQuiz = await fetcher(`/api/uploadQuiz?quiz=${quiz}&author=${id}`, undefined)
     router.push(`/quiz/${createdQuiz.code}`);
   }
 
   async function handleClick() {
     setLoading(true)
-    if (id != "" && subject.length < 50) {
+    if (id != "" && subject.length < 100) {
       setProgress(0);
       const generatedQuiz = await fetcher(`/api/generateQuiz?prompt=${subject}`, undefined)
       setProgress((prevProgress) => (prevProgress >= 90 ? 98 : 90));
@@ -108,7 +109,7 @@ export default function Home() {
       quiz.replace(/\n/g, '')
       goToQuiz(quiz)
     }
-    else window.alert("TOO LONG YOU FOOL")
+    else window.alert("Prompt to long!")
   }
 
   async function continueWithEmail() {
@@ -118,13 +119,15 @@ export default function Home() {
 
       try {
         createUser = await fetcher(`/api/createUser?password=${password}&email=${email}`, undefined)
+        setID(createUser.id)
       }
       catch (error) {
-        await fetchUser(true)
-        return
+        createUser = await fetchUser(true)
+        if (!createUser) {
+          window.alert("Email taken/wrong password")
+        }
       }
       
-      setID(createUser.id)
       document.cookie = `user=${JSON.stringify(createUser)}; path=/`
       document.cookie = `email=${createUser.email}; path=/`
       document.cookie = `password=${createUser.password}; path=/`

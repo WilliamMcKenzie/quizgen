@@ -27,26 +27,17 @@ function getCookie(cname: string) {
 }
 
 export default function Quiz({ params }: { params: { id: string } }) {
-  const router = useRouter();
-
-  const modalRef = useRef<HTMLDialogElement>(null);
-  const quizID = params.id;
-  const [quiz, setQuiz] = useState([]);
-  const [quizName, setQuizName] = useState("");
-  const [curStep, setStep] = useState(0);
-  const [user, setUser] = useState({ quizDetails : { "" : { q : 0, c : 0 } }})
+  const router = useRouter()
+  const [user, setUser] = useState()
 
   useEffect(() => {
     fetchUser()
-  }, []);
+  }, [])
 
   async function fetchUser(){
-  }
-
-  async function goToStep(index: number) {
-    if(index <= curStep){
-        setQuiz([])
-        router.push(`/quiz/${quizID}/${index}`);
+    if(getCookie("user")){
+      setUser(JSON.parse(getCookie("user")!))
+      console.log(JSON.parse(getCookie("user")!))
     }
   }
 
