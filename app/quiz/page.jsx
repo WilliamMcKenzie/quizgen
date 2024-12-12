@@ -1,16 +1,8 @@
 "use client";
-import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-import LoadingScreen from "@/app/components/loading_screen";
-import { motion } from "framer-motion";
-import FinishScreen from "@/app/components/finish_screen";
 
-const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
-  return axios.get(url, data).then(res => res.data);
-};
-
-export default function Quiz({ params }: { params: { id: string } }) {
+export default function Quiz() {
   const router = useRouter()
   const [quizzes, setQuizzes] = useState()
   const [user, setUser] = useState()
@@ -18,9 +10,9 @@ export default function Quiz({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if(localStorage.getItem("user")){
-      setUser(JSON.parse(localStorage.getItem("user")!))
-      setQuizzes(JSON.parse(localStorage.getItem("user")!).quizzes)
-      const tempQuizzes = JSON.parse(localStorage.getItem("user")!).quizzes
+      setUser(JSON.parse(localStorage.getItem("user")))
+      setQuizzes(JSON.parse(localStorage.getItem("user")).quizzes)
+      const tempQuizzes = JSON.parse(localStorage.getItem("user")).quizzes
       
       if (tempQuizzes) {
         const quizCount = tempQuizzes["length"]
@@ -52,16 +44,16 @@ export default function Quiz({ params }: { params: { id: string } }) {
       </div>
       <div className="mt-40" style={{ overflow: "scroll", maxHeight: "26rem", width: "74rem", display: "grid", gridGap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))"}}>
         {
-          user ?
+          (quizzes  && typeof quizzes[Symbol.iterator] === 'function') ?
           quizzes.map((quiz, index) => {
-            if (!JSON.parse(user!.quizDetails)[quiz.code]) {
+            if (!JSON.parse(user.quizDetails)[quiz.code]) {
               return <></>
             }
 
-            return <div key={index} onClick={() => router.push("/quiz/" + quiz.code)} className={"w-96 h-32 btn " + ((JSON.parse(user!.quizDetails)[quiz.code].step == JSON.parse(quiz.content).length) ? (index % 3 == 0 ? "btn-primary" : index % 3 == 1 ? "btn-secondary" : "btn-accent") : "")}>
+            return <div key={index} onClick={() => router.push("/quiz/" + quiz.code)} className={"w-96 h-32 btn " + ((JSON.parse(user.quizDetails)[quiz.code].step == JSON.parse(quiz.content).length) ? (index % 3 == 0 ? "btn-primary" : index % 3 == 1 ? "btn-secondary" : "btn-accent") : "")}>
             <div className="card-body items-center text-center">
               <h2 className="card-title">{quiz.name}</h2>
-              <p>Progress {JSON.parse(user!.quizDetails)[quiz.code].step}/{JSON.parse(quiz.content).length}</p>
+              <p>Progress {JSON.parse(user.quizDetails)[quiz.code].step}/{JSON.parse(quiz.content).length}</p>
             </div>
           </div>
           })
