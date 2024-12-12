@@ -28,16 +28,18 @@ export default function Home() {
 
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "")
 
-  window.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      if (id != "" && id != "LOADING") {
-        queueQuiz()
+  if (typeof window !== 'undefined') {
+    window.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        if (id != "" && id != "LOADING") {
+          queueQuiz()
+        }
+        else {
+          standardLogin()
+        }
       }
-      else {
-        standardLogin()
-      }
-    }
-  });
+    })
+  }
 
   useEffect(() => {
     KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
