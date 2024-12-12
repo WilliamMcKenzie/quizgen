@@ -10,21 +10,6 @@ import LoadingScreen from "@/app/components/loading_screen";
 const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
 };
-function getCookie(cname: string) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return null;
-}
 
 export default function Step({ params }: { params: { id: string, step: number } }) {
   const router = useRouter();
@@ -44,7 +29,8 @@ export default function Step({ params }: { params: { id: string, step: number } 
   async function goToQuiz() {
     setStep({name:"",questions:[{question:"",responses:[],correctIndex:0}]})
     const newUser = await fetcher(`/api/updateQuiz?uid=${user.id}&qid=${quizID}&q=${step.questions.length}&c=${score}&step=${curStepNUM}`, undefined)
-    document.cookie = `user=${JSON.stringify(newUser)}; path=/`
+    localStorage.setItem("user", JSON.stringify(newUser))
+    
     router.push(`/quiz/${quizID}`);
   }
   async function fetchQuizInit(){
@@ -52,8 +38,8 @@ export default function Step({ params }: { params: { id: string, step: number } 
     setStep(JSON.parse(fetchedQuiz.content)[curStepNUM])
   }
   function fetchUser(){
-    if(getCookie("user")){
-      return JSON.parse(getCookie("user")!)
+    if(localStorage.getItem("user")){
+      return JSON.parse(localStorage.getItem("user")!)
     }
   
     return false

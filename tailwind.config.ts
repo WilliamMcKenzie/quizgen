@@ -34,6 +34,9 @@ const config: Config = {
           ".btn-primary": {
             "color": "#FFF6DD",
           },
+          ".bg-primary": {
+            "color": "#FFF6DD",
+          },
           ".btn-accent": {
             "color": "#FFD7E7",
           },
