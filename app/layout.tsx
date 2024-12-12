@@ -12,8 +12,8 @@ const font_init = Anek_Bangla({
 });
 
 export const metadata: Metadata = {
-  title: "Quiz Gen",
-  description: "Generate, lightening fast.",
+  title: "Quizgen",
+  description: "Test yourself on anything.",
 };
 
 export default function RootLayout({

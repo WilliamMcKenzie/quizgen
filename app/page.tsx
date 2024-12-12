@@ -11,22 +11,6 @@ const fetcher = (url: string, data: AxiosRequestConfig<any> | undefined) => {
   return axios.get(url, data).then(res => res.data);
 };
 
-function getCookie(cname: string) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return null;
-}
-
 export default function Home() {
   const router = useRouter();
   const [subject, setSubject] = useState("");
@@ -47,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     KUTE.to('#top1', { path: "#top2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
     KUTE.to('#bot1', { path: "#bot2" }, {repeat: 999, duration: 3000, yoyo: true}).start();
-    fetchUser(false)
+    autoLogin()
 
     const timer = setInterval(() => {
       setProgress((prevProgress) => (prevProgress >= 100 ? 100 : prevProgress + 2.5));
@@ -58,84 +42,81 @@ export default function Home() {
     };
   }, []);
 
-  async function fetchUser(login : Boolean) {
-    var _email = email
-    var _password = password
+  async function autoLogin() {
+    const user = await fetchUser(localStorage.getItem("email")!, localStorage.getItem("password")!)
+    localStorage.setItem("user", JSON.stringify(user))
+  }
 
-    if (!login && getCookie("email") && getCookie("password")) {
-      _email = getCookie("email")!
-      _password = getCookie("password")!
-    }
-    else if (!login) {
-      return
-    }
+  async function standardLogin() {
+    if (password != "" && email != "") {
+      var user
+      setID("LOADING")
 
-    setID("LOADING")
-    const fetchUser = await fetcher(`/api/fetchUser?password=${_password}&email=${_email}`, undefined)
+      try {
+        user = await fetcher(`/api/createUser?password=${password}&email=${email}`, undefined)
+        setID(user.id)
+      }
+      catch (error) {
+        user = await fetchUser(email, password)
 
-    if (fetchUser.id) {
-      setID(fetchUser.id)
+        if (!user) {
+          window.alert("Email taken/wrong password")
+          return
+        }
+      }
+
+      localStorage.setItem("user", JSON.stringify(user))
+      localStorage.setItem("email", email)
+      localStorage.setItem("password", password)
 
       if (searchParams.has("go")) {
         router.push(`/quiz/${searchParams.get("go")}`);
       }
     }
-    else {
+  }
+  
+  async function fetchUser(email: string, password: string) {
+    setID("LOADING")
+    const user = await fetcher(`/api/fetchUser?password=${password}&email=${email}`, undefined)
+
+    if (user.id) {
+      setID(user.id)
+    }
+    else { 
       setID("")
     }
-    return fetchUser
+
+    if (searchParams.has("go") && user.id) {
+      router.push(`/quiz/${searchParams.get("go")}`);
+    }
+    else {
+      return user
+    }
   }
 
-  async function goToQuiz(quiz: string) {
+  async function createQuiz(quiz: string) {
     const createdQuiz = await fetcher(`/api/uploadQuiz?quiz=${quiz}&author=${id}`, undefined)
     router.push(`/quiz/${createdQuiz.code}`);
   }
 
-  async function handleClick() {
+  async function queueQuiz() {
     setLoading(true)
+
     if (id != "" && subject.length < 100) {
       setProgress(0);
       const generatedQuiz = await fetcher(`/api/generateQuiz?prompt=${subject}`, undefined)
       setProgress((prevProgress) => (prevProgress >= 90 ? 98 : 90));
 
       var stack = generatedQuiz.split("0:")
-
       var quiz = ``
       for(var chunk of stack) {
         try {quiz += JSON.parse(`{"char":${chunk}`.trimEnd() + "}").char;}
-        catch(error){
-        }
+        catch {}
       }
       quiz.replace(/\n/g, '')
-      goToQuiz(quiz)
+      createQuiz(quiz)
     }
     else window.alert("Prompt to long!")
-  }
-
-  async function continueWithEmail() {
-    if (password != "" && email != "") {
-      var createUser
-      setID("LOADING")
-
-      try {
-        createUser = await fetcher(`/api/createUser?password=${password}&email=${email}`, undefined)
-        setID(createUser.id)
-      }
-      catch (error) {
-        createUser = await fetchUser(true)
-        if (!createUser) {
-          window.alert("Email taken/wrong password")
-        }
-      }
-      
-      document.cookie = `user=${JSON.stringify(createUser)}; path=/`
-      document.cookie = `email=${createUser.email}; path=/`
-      document.cookie = `password=${createUser.password}; path=/`
-
-      if (searchParams.has("go")) {
-        router.push(`/quiz/${searchParams.get("go")}`);
-      }
-    }
   }
 
   return (
@@ -199,7 +180,7 @@ export default function Home() {
           Your quizzes
         </button>
       </div>
-      <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1>
+      <h1 className="text-center mb-4 text-4xl font-bold" >QUIZ GEN</h1> 
       <h3 className="text-center mb-4 text-xl">Test your knowledge on anything.</h3>
       <svg className={"svg_blend"} id="visual" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
         <g transform="translate(900, 600)">
@@ -240,7 +221,7 @@ export default function Home() {
               disabled={loading}
             />
 
-            <button onClick={handleClick} disabled={loading}>
+            <button onClick={queueQuiz} disabled={loading}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 opacity-70">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -296,7 +277,7 @@ export default function Home() {
             </div>
             <button
               className={`btn btn-primary mt-6`}
-              onClick={continueWithEmail}
+              onClick={standardLogin}
               disabled={password == "" || email == "" ? true : false}
             >
               CONTINUE

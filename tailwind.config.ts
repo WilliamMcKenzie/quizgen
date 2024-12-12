@@ -37,9 +37,6 @@ const config: Config = {
           ".btn-accent": {
             "color": "#FFD7E7",
           },
-          ".bg-primary": {
-            "color": "#FFF6DD",
-          },
         },
       },
     ],

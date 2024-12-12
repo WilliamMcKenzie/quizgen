@@ -24,12 +24,17 @@ export async function GET(request) {
     } else {
         tempQuizDetails = {}
     }
-    tempQuizDetails[quizID] = {
-        q: (tempQuizDetails[quizID]?.q ?? 0) + newQuestions,
-        c: (tempQuizDetails[quizID]?.c ?? 0) + correctAnswers,
-        step: step
-    };
 
+    console.log(tempQuizDetails[quizID]?.step)
+    console.log(step)
+    const invalid = (tempQuizDetails[quizID]?.step ?? 0) > step
+    if (!invalid) {
+        tempQuizDetails[quizID] = {
+            q: (tempQuizDetails[quizID]?.q ?? 0) + newQuestions,
+            c: (tempQuizDetails[quizID]?.c ?? 0) + correctAnswers,
+            step: step
+        };
+    }
 
     const updatedUser = await prisma.user.update({
         where: {
@@ -49,7 +54,7 @@ export async function GET(request) {
         var ranking = quiz?.ranking
         ranking[curUser.email] = [tempQuizDetails[quizID].c, tempQuizDetails[quizID].q]
 
-        const updatedQuiz = await prisma.quiz.updateMany({
+        await prisma.quiz.updateMany({
             where: {
                 code : quizID
             },

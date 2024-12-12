@@ -15,6 +15,9 @@ export async function GET(request: NextRequest) {
             where: {
                 email: email,
                 password: password
+            },
+            include: {
+                quizzes: true
             }
         });
     }

@@ -40,7 +40,7 @@ export default function Quiz({ params }: { params: { id: string } }) {
   const [curStep, setStep] = useState(0);
   const [user, setUser] = useState({ email : "", quizDetails : { "" : { q : 0, c : 0 } }})
 
-  const [ratio, setRatio] = useState([0,0]);
+  const [ratio, setRatio] = useState([0,0])
   const margins = [-70,70]
 
   const [showFinishScreen, setSFS] = useState(false)
@@ -65,11 +65,11 @@ export default function Quiz({ params }: { params: { id: string } }) {
 
       if(getCookie("user")){
         setUser(JSON.parse(getCookie("user")!))
+        
         if(JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]){
           var quizJSON = JSON.parse(JSON.parse(getCookie("user")!).quizDetails)[quizID]
           setStep(quizJSON.step)
 
-          console.log(quizJSON.step + "    " + JSON.parse(fetchedQuiz.content).length)
           if(quizJSON.step >= JSON.parse(fetchedQuiz.content).length) setSFS(true);
           
           var t = quizJSON.q
