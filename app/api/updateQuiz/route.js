@@ -25,8 +25,6 @@ export async function GET(request) {
         tempQuizDetails = {}
     }
 
-    console.log(tempQuizDetails[quizID]?.step)
-    console.log(step)
     const invalid = (tempQuizDetails[quizID]?.step ?? 0) > step
     if (!invalid) {
         tempQuizDetails[quizID] = {

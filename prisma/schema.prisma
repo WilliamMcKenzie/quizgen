@@ -18,6 +18,11 @@ model User {
   password String
   email String @unique
   userID String[] @db.ObjectId
+  
+  verified Boolean @default(false)
+  pro Boolean @default(false)
+  dailyUses Int @default(0)
+  lastUsed DateTime @default(now())
 
   quizDetails String
   quizzes Quiz[]
